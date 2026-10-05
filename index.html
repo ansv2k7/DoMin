@@ -3,557 +3,321 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Dò Mìn 16×16 - Thành An</title>
+<title>Dò Mìn 3D - Thành An</title>
 <style>
-  :root{
-    --bg-deep:#161a24;
-    --bg-panel:#1f2530;
-    --bg-panel-2:#252c3a;
-    --cell-up-a:#3d4863;
-    --cell-up-b:#2b3245;
-    --cell-up-edge:#4d5b7c;
-    --cell-down:#11141c;
-    --cell-down-edge:#080a10;
-    --accent:#e6a13d;
-    --accent-dim:#a97a2c;
-    --danger:#e0524a;
-    --text:#e9e7e0;
-    --text-dim:#8c93a6;
-    --lcd-bg:#150404;
-    --lcd-fg:#ff4b3e;
-    --num1:#5b9bf0;
-    --num2:#57c98a;
-    --num3:#ef6a62;
-    --num4:#a689e8;
-    --num5:#d98a3d;
-    --num6:#3ecfcb;
-    --num7:#e9e7e0;
-    --num8:#8c93a6;
-    font-size:16px;
-  }
-  *{box-sizing:border-box;}
-  html,body{
-    margin:0;
-    height:100%;
-    background:
-      radial-gradient(1200px 800px at 50% -10%, #232a3a 0%, var(--bg-deep) 55%);
-    color:var(--text);
-    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:auto;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .stage{
-    position:relative;
-    padding:18px;
-    width:min(96vw,640px);
-  }
-  .title-row{
-    text-align:center;
-    margin-bottom:10px;
-    letter-spacing:.14em;
-    font-size:.72rem;
-    text-transform:uppercase;
-    color:var(--text-dim);
-    font-weight:600;
-  }
-  .title-row b{
-    color:var(--accent);
-    letter-spacing:.02em;
-  }
-  .panel{
-    position:relative;
-    background:linear-gradient(180deg,var(--bg-panel),var(--bg-panel-2));
-    border-radius:16px;
-    padding:14px;
-    box-shadow:
-      0 20px 50px -20px rgba(0,0,0,.7),
-      0 1px 0 rgba(255,255,255,.04) inset,
-      0 -1px 0 rgba(0,0,0,.4) inset;
-    border:1px solid #333c4f;
-  }
-  /* mode toggle - corner of the game */
-  .mode-toggle{
-    position:absolute;
-    top:-14px;
-    right:-14px;
-    width:52px;
-    height:52px;
-    border-radius:50%;
-    border:2px solid var(--accent-dim);
-    background:radial-gradient(circle at 32% 28%, #3a4257, #1c2130 75%);
-    color:var(--accent);
-    font-size:1.35rem;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    box-shadow:0 8px 18px -6px rgba(0,0,0,.7), 0 0 0 4px var(--bg-deep);
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-    z-index:5;
-    user-select:none;
-  }
-  .mode-toggle:active{transform:scale(.92);}
-  .mode-toggle.flag-mode{
-    border-color:var(--accent);
-    box-shadow:0 0 0 4px var(--bg-deep), 0 0 16px 2px rgba(230,161,61,.55);
-  }
-  .mode-toggle .hint{
-    position:absolute;
-    bottom:-20px;
-    right:2px;
-    font-size:.6rem;
-    letter-spacing:.06em;
-    color:var(--text-dim);
-    white-space:nowrap;
-    text-transform:uppercase;
-  }
+:root{
+  --bg:#12151d; --panel:#1e2430; --panel2:#272f3f;
+  --up-a:#506082; --up-b:#2e374f; --side:#10141f;
+  --down:#0d1017; --accent:#e6a13d; --danger:#e0524a; --text:#ece9e1; --dim:#8c93a6;
+  --lcd-bg:#150404; --lcd-fg:#ff4b3e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  background:radial-gradient(1100px 700px at 50% -10%,#273049 0%,var(--bg) 60%);
+  display:flex;align-items:center;justify-content:center;overflow:auto;-webkit-tap-highlight-color:transparent}
+.stage{position:relative;padding:22px 18px 40px;width:min(96vw,640px)}
+.title{text-align:center;margin-bottom:12px;font-size:.8rem;letter-spacing:.12em;color:var(--dim);font-weight:600}
+.title b{color:var(--accent)}
+.panel{position:relative;background:linear-gradient(180deg,var(--panel),var(--panel2));border-radius:18px;padding:14px;
+  border:1px solid #38425a;box-shadow:0 30px 60px -25px #000,inset 0 1px 0 rgba(255,255,255,.06)}
+.panel.shake{animation:shake .55s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(5px,-3px)}30%,50%,70%{transform:translate(-9px,4px)}40%,60%{transform:translate(9px,-4px)}}
+.mode{position:absolute;top:-14px;right:-14px;width:54px;height:54px;border-radius:50%;border:2px solid #a97a2c;cursor:pointer;
+  background:radial-gradient(circle at 32% 28%,#434c66,#1a1f2d 75%);color:var(--accent);font-size:1.3rem;
+  display:flex;align-items:center;justify-content:center;z-index:5;user-select:none;
+  box-shadow:0 8px 18px -6px #000,0 0 0 4px var(--bg);transition:transform .12s}
+.mode:active{transform:scale(.9)}
+.mode.on{border-color:var(--accent);box-shadow:0 0 0 4px var(--bg),0 0 18px 2px rgba(230,161,61,.6)}
+.mode small{position:absolute;bottom:-20px;right:0;font-size:.62rem;color:var(--dim);white-space:nowrap}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;padding:8px 10px;
+  background:var(--down);border-radius:12px;box-shadow:inset 0 2px 8px #000}
+.lcd{background:var(--lcd-bg);color:var(--lcd-fg);font:700 1.4rem 'Courier New',monospace;letter-spacing:.12em;
+  padding:5px 10px;border-radius:6px;min-width:76px;text-align:center;text-shadow:0 0 9px rgba(255,75,62,.8);box-shadow:inset 0 1px 5px #000}
+.face{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;
+  background:linear-gradient(160deg,var(--up-a),var(--up-b));border:1px solid #5d6e94;box-shadow:0 4px 0 var(--side),0 8px 10px -4px #000;
+  transition:transform .08s,box-shadow .08s;user-select:none}
+.face:active{transform:translateY(3px);box-shadow:0 1px 0 var(--side)}
 
-  .hud{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:12px;
-    padding:8px 10px;
-    background:var(--cell-down);
-    border-radius:10px;
-    border:1px solid #0a0d13;
-    box-shadow:inset 0 2px 6px rgba(0,0,0,.6);
-  }
-  .lcd{
-    background:var(--lcd-bg);
-    color:var(--lcd-fg);
-    font-family:'Courier New',monospace;
-    font-weight:700;
-    font-size:1.4rem;
-    letter-spacing:.12em;
-    padding:5px 10px;
-    border-radius:6px;
-    min-width:74px;
-    text-align:center;
-    text-shadow:0 0 8px rgba(255,75,62,.75);
-    border:1px solid #2a0808;
-    box-shadow:inset 0 1px 4px rgba(0,0,0,.8);
-  }
-  .face-btn{
-    width:44px;
-    height:44px;
-    border-radius:10px;
-    background:linear-gradient(180deg,var(--cell-up-a),var(--cell-up-b));
-    border:1px solid var(--cell-up-edge);
-    font-size:1.4rem;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    box-shadow:0 3px 0 #10131c, 0 6px 10px -4px rgba(0,0,0,.6);
-    transition:transform .08s ease, box-shadow .08s ease;
-  }
-  .face-btn:active{
-    transform:translateY(2px);
-    box-shadow:0 1px 0 #10131c, 0 2px 4px -2px rgba(0,0,0,.6);
-  }
+.scene{perspective:1000px;padding:6px 2px 24px}
+.board{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;padding:7px;border-radius:12px;background:#0a0c12;
+  transform:rotateX(var(--rx,16deg)) rotateY(var(--ry,0deg));transition:transform .18s ease-out;touch-action:manipulation;
+  box-shadow:0 12px 0 #07090d,0 26px 30px -4px rgba(0,0,0,.75),inset 0 2px 8px #000}
+.cell{position:relative;aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(11px,2.6vw,16px);font-weight:900;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  background:linear-gradient(145deg,var(--up-a),var(--up-b));
+  box-shadow:0 3px 0 var(--side),0 5px 6px rgba(0,0,0,.55),inset 1px 1px 0 rgba(255,255,255,.25),inset -1px -1px 0 rgba(0,0,0,.3);
+  transition:transform .1s,filter .1s}
+@media(hover:hover){.cell:not(.revealed):hover{transform:translateY(-2px);filter:brightness(1.18)}}
+.cell:not(.revealed):active{transform:translateY(2px);box-shadow:0 1px 0 var(--side)}
+.cell.revealed{cursor:default;transform:translateY(3px);background:radial-gradient(circle at 50% 35%,#171b26,var(--down));
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 0 0 1px #07090d;animation:dig .34s ease-out var(--d,0ms) backwards}
+@keyframes dig{0%{transform:translateY(-10px) scale(1.14);filter:brightness(2)}60%{transform:translateY(5px) scale(.95)}100%{transform:translateY(3px)}}
+.cell.mine-cell{background:radial-gradient(circle,#4a2024,#1c0e10)}
+.cell.exploded{background:radial-gradient(circle,#ff9a3a,#b22a1c 60%,#4d0f0b);animation:blast .5s ease-out;
+  box-shadow:0 0 22px 5px rgba(255,110,40,.9),inset 0 0 8px #000}
+@keyframes blast{0%{transform:translateY(-6px) scale(1.7);filter:brightness(3)}100%{transform:translateY(3px) scale(1)}}
+.cell.wrong{color:var(--danger);font-size:1.1em}
+.cell.glow{box-shadow:0 0 0 2px var(--accent) inset,0 0 12px 2px rgba(230,161,61,.65),0 3px 0 var(--side)}
+.n1{color:#5b9bf0}.n2{color:#57c98a}.n3{color:#ef6a62}.n4{color:#a689e8}.n5{color:#d98a3d}.n6{color:#3ecfcb}.n7{color:#ece9e1}.n8{color:#8c93a6}
+.cell.revealed:not(.mine-cell):not(.wrong){text-shadow:0 1px 0 #000,0 0 9px currentColor}
 
-  .board{
-    display:grid;
-    grid-template-columns:repeat(16, 1fr);
-    gap:2px;
-    background:#0c0f16;
-    padding:6px;
-    border-radius:10px;
-    border:1px solid #0a0d13;
-    box-shadow:inset 0 2px 10px rgba(0,0,0,.6);
-    touch-action: manipulation;
-  }
-  .cell{
-    position:relative;
-    aspect-ratio:1/1;
-    border-radius:4px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:clamp(11px, 2.4vw, 15px);
-    font-weight:800;
-    cursor:pointer;
-    user-select:none;
-    -webkit-user-select:none;
-    -webkit-touch-callout:none;
-    background:linear-gradient(155deg,var(--cell-up-a),var(--cell-up-b));
-    box-shadow:
-      inset 1px 1px 0 rgba(255,255,255,.12),
-      inset -1px -1px 0 rgba(0,0,0,.35);
-    transition:filter .1s ease, transform .06s ease;
-  }
-  .cell:active{filter:brightness(1.08);}
-  .cell.revealed{
-    cursor:default;
-    background:var(--cell-down);
-    box-shadow:inset 0 0 0 1px var(--cell-down-edge);
-  }
-  .cell.revealed.zero{background:var(--cell-down);}
-  .cell.mine-cell{
-    background:linear-gradient(155deg,#3a2226,#241416);
-  }
-  .cell.mine-cell.exploded{
-    background:linear-gradient(155deg,var(--danger),#7a1d18);
-    box-shadow:0 0 14px 2px rgba(224,82,74,.8);
-  }
-  .cell.flagged::after{
-    content:"⚑";
-    color:var(--accent);
-    font-size:clamp(12px,2.6vw,17px);
-    filter:drop-shadow(0 1px 1px rgba(0,0,0,.6));
-  }
-  .cell.chord-glow{
-    box-shadow:0 0 0 2px var(--accent) inset, 0 0 10px 1px rgba(230,161,61,.6);
-  }
-  .cell .mine-icon{font-size:clamp(11px,2.4vw,15px);}
-  .n1{color:var(--num1);} .n2{color:var(--num2);} .n3{color:var(--num3);}
-  .n4{color:var(--num4);} .n5{color:var(--num5);} .n6{color:var(--num6);}
-  .n7{color:var(--num7);} .n8{color:var(--num8);}
+.bomb{width:64%;height:64%;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 35% 30%,#9aa3b8 0,#2d313d 38%,#05060a 82%);box-shadow:0 2px 4px #000,0 0 0 1px #000}
+.bomb::before{content:"";position:absolute;top:-20%;right:6%;width:3px;height:34%;background:#b08a4a;border-radius:2px;transform:rotate(28deg)}
+.bomb::after{content:"";position:absolute;left:20%;top:16%;width:26%;height:16%;border-radius:50%;background:rgba(255,255,255,.6);filter:blur(1px);transform:rotate(-30deg)}
+.exploded .bomb{box-shadow:0 0 14px 5px #ff7a2a}
+.flag{width:96%;height:96%;overflow:visible;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+.flag.plant{animation:plant .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes plant{0%{transform:translateY(-22px) scale(1.5);opacity:0}60%{opacity:1}100%{transform:none}}
+.cloth{transform-box:fill-box;transform-origin:left center;animation:wave 1.1s ease-in-out infinite alternate}
+@keyframes wave{from{transform:scaleX(1) skewY(0)}to{transform:scaleX(.8) skewY(-9deg)}}
 
-  .status-line{
-    margin-top:10px;
-    text-align:center;
-    font-size:.8rem;
-    min-height:1.2em;
-    color:var(--text-dim);
-    letter-spacing:.02em;
-  }
-  .status-line.win{color:var(--num2);font-weight:700;}
-  .status-line.lose{color:var(--danger);font-weight:700;}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+#flash{position:fixed;inset:0;pointer-events:none;z-index:49;opacity:0;background:radial-gradient(circle,#fff6d0,#ff8a30 45%,transparent 75%)}
+#flash.go{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:.85}100%{opacity:0}}
+.status{margin-top:8px;text-align:center;font-size:.8rem;min-height:1.2em;color:var(--dim)}
+.status.win{color:#57c98a;font-weight:700}.status.lose{color:var(--danger);font-weight:700}
+@media(prefers-reduced-motion:reduce){.panel.shake,.cell.revealed{animation:none}.cloth{animation:none}}
 </style>
 </head>
 <body>
-
+<canvas id="fx"></canvas><div id="flash"></div>
 <div class="stage">
-  <div class="title-row">DÒ <b>MÌN</b> · By Thành An</div>
-  <div class="panel">
-    <button class="mode-toggle" id="modeToggle" title="Đổi chế độ">
-      🔍
-      <span class="hint" id="modeHint">Dò</span>
-    </button>
-
+  <div class="title">DÒ <b>MÌN</b> 3D · By Thành An</div>
+  <div class="panel" id="panel">
+    <button class="mode" id="modeBtn" title="Đổi chế độ"><span id="modeIcon">🔍</span><small id="modeHint">Dò</small></button>
     <div class="hud">
-      <div class="lcd" id="mineCounter">040</div>
-      <div class="face-btn" id="resetBtn">🙂</div>
+      <div class="lcd" id="mines">040</div>
+      <div class="face" id="reset">🙂</div>
       <div class="lcd" id="timer">000</div>
     </div>
-
-    <div class="board" id="board"></div>
-
-    <div class="status-line" id="statusLine">Nhấn giữ một ô số đã mở để dò nhanh các ô xung quanh</div>
+    <div class="scene"><div class="board" id="board"></div></div>
+    <div class="status" id="status"></div>
   </div>
 </div>
 
 <script>
 (function(){
-  const SIZE = 16;
-  const MINES = 40;
-  const boardEl = document.getElementById('board');
-  const mineCounterEl = document.getElementById('mineCounter');
-  const timerEl = document.getElementById('timer');
-  const resetBtn = document.getElementById('resetBtn');
-  const modeToggle = document.getElementById('modeToggle');
-  const modeHint = document.getElementById('modeHint');
-  const statusLine = document.getElementById('statusLine');
+const SIZE=16, MINES=40, HINT='Nhấn giữ ô số đã mở để dò nhanh, nhấn giữ ô trống để cắm cờ';
+const $=id=>document.getElementById(id);
+const boardEl=$('board'), minesEl=$('mines'), timerEl=$('timer'), resetBtn=$('reset'),
+      modeBtn=$('modeBtn'), statusEl=$('status'), panel=$('panel');
+let grid=[], first=false, over=false, flags=0, revealed=0, secs=0, tInt=null, mode='dig', timeouts=[];
+let pressTimer=null, longFired=false, pressCell=null;
+const idx=(r,c)=>r*SIZE+c;
 
-  let grid = [];         // {mine, revealed, flagged, adj, el}
-  let firstClickDone = false;
-  let gameOver = false;
-  let flagsPlaced = 0;
-  let revealedCount = 0;
-  let timerInterval = null;
-  let seconds = 0;
-  let mode = 'dig'; // 'dig' | 'flag'
-
-  const LONG_PRESS_MS = 450;
-  let pressTimer = null;
-  let longPressFired = false;
-  let pressCell = null;
-
-  function idx(r,c){ return r*SIZE+c; }
-
-  function buildEmptyGrid(){
-    grid = [];
-    boardEl.innerHTML = '';
-    for(let r=0;r<SIZE;r++){
-      for(let c=0;c<SIZE;c++){
-        const cellData = {mine:false, revealed:false, flagged:false, adj:0, r, c};
-        const el = document.createElement('div');
-        el.className = 'cell';
-        el.dataset.r = r;
-        el.dataset.c = c;
-        boardEl.appendChild(el);
-        cellData.el = el;
-        grid.push(cellData);
-        attachHandlers(el, cellData);
-      }
-    }
-  }
-
-  function neighbors(r,c){
-    const res = [];
-    for(let dr=-1;dr<=1;dr++){
-      for(let dc=-1;dc<=1;dc++){
-        if(dr===0 && dc===0) continue;
-        const nr=r+dr, nc=c+dc;
-        if(nr>=0 && nr<SIZE && nc>=0 && nc<SIZE) res.push(grid[idx(nr,nc)]);
-      }
-    }
-    return res;
-  }
-
-  function placeMines(excludeR, excludeC){
-    const forbidden = new Set();
-    forbidden.add(idx(excludeR,excludeC));
-    neighbors(excludeR,excludeC).forEach(n => forbidden.add(idx(n.r,n.c)));
-
-    let placed = 0;
-    while(placed < MINES){
-      const i = Math.floor(Math.random()*SIZE*SIZE);
-      if(forbidden.has(i)) continue;
-      if(grid[i].mine) continue;
-      grid[i].mine = true;
-      placed++;
-    }
-    grid.forEach(cell => {
-      if(cell.mine) return;
-      cell.adj = neighbors(cell.r,cell.c).filter(n=>n.mine).length;
-    });
-  }
-
-  function startTimer(){
-    if(timerInterval) return;
-    timerInterval = setInterval(()=>{
-      seconds++;
-      if(seconds>999) seconds=999;
-      timerEl.textContent = String(seconds).padStart(3,'0');
-    },1000);
-  }
-  function stopTimer(){
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-
-  function updateMineCounter(){
-    const remaining = MINES - flagsPlaced;
-    mineCounterEl.textContent = String(remaining).padStart(3,'0');
-  }
-
-  function setStatus(text, cls){
-    statusLine.textContent = text;
-    statusLine.className = 'status-line' + (cls ? ' '+cls : '');
-  }
-
-  function reset(){
-    gameOver = false;
-    firstClickDone = false;
-    flagsPlaced = 0;
-    revealedCount = 0;
-    seconds = 0;
-    stopTimer();
-    timerEl.textContent = '000';
-    updateMineCounter();
-    resetBtn.textContent = '🙂';
-    setStatus('Nhấn giữ một ô số đã mở để dò nhanh các ô xung quanh');
-    buildEmptyGrid();
-  }
-
-  function renderCell(cell){
-    const el = cell.el;
-    el.className = 'cell';
-    el.innerHTML = '';
-    if(cell.revealed){
-      el.classList.add('revealed');
-      if(cell.mine){
-        el.classList.add('mine-cell');
-        if(cell.exploded) el.classList.add('exploded');
-        el.innerHTML = '<span class="mine-icon">💣</span>';
-      } else if(cell.adj>0){
-        el.textContent = cell.adj;
-        el.classList.add('n'+cell.adj);
-      } else {
-        el.classList.add('zero');
-      }
+/* ---------- Âm thanh ---------- */
+let AC;
+function sfx(kind){
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const t=AC.currentTime;
+    if(kind==='boom'||kind==='pop'){
+      const big=kind==='boom', len=big?1:.35, buf=AC.createBuffer(1,AC.sampleRate*len,AC.sampleRate), d=buf.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
+      const s=AC.createBufferSource(); s.buffer=buf;
+      const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.setValueAtTime(big?900:1400,t); f.frequency.exponentialRampToValueAtTime(70,t+len);
+      const g=AC.createGain(); g.gain.value=big?1.1:.4;
+      s.connect(f).connect(g).connect(AC.destination); s.start();
     } else {
-      if(cell.flagged) el.classList.add('flagged');
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type='triangle';
+      o.frequency.setValueAtTime(kind==='flag'?420:620,t); o.frequency.exponentialRampToValueAtTime(kind==='flag'?820:300,t+.12);
+      g.gain.setValueAtTime(.18,t); g.gain.exponentialRampToValueAtTime(.001,t+.16);
+      o.connect(g).connect(AC.destination); o.start(); o.stop(t+.17);
     }
-  }
+  }catch(e){}
+}
 
-  function revealCell(cell){
-    if(cell.revealed || cell.flagged || gameOver) return;
-    cell.revealed = true;
-    revealedCount++;
-    renderCell(cell);
-
-    if(cell.mine){
-      loseGame(cell);
-      return;
+/* ---------- Hạt hiệu ứng (canvas) ---------- */
+const cv=$('fx'), ctx=cv.getContext('2d'); let parts=[], raf=0, last=0;
+function resize(){const d=devicePixelRatio||1;cv.width=innerWidth*d;cv.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',resize); resize();
+const R=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+function emit(o){parts.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,d:.9,a:0,max:1,s:4,c:'255,160,40',t:'fire'},o));if(!raf){last=performance.now();raf=requestAnimationFrame(loop)}}
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now; ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i]; p.a+=dt; const k=p.a/p.max;
+    if(k>=1){parts.splice(i,1);continue}
+    const dr=Math.pow(p.d,dt*60); p.vx*=dr; p.vy=p.vy*dr+p.g*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+    if(p.t==='ring'){
+      ctx.globalCompositeOperation='lighter'; ctx.strokeStyle=`rgba(${p.c},${(1-k)*.8})`; ctx.lineWidth=p.s*(1-k)+1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.grow*Math.sqrt(k),0,7); ctx.stroke(); continue;
     }
-    if(cell.adj === 0){
-      neighbors(cell.r,cell.c).forEach(n=>{
-        if(!n.revealed && !n.flagged) revealCell(n);
-      });
+    if(p.t==='spark'){
+      ctx.globalCompositeOperation='lighter'; ctx.strokeStyle=`rgba(${p.c},${1-k})`; ctx.lineWidth=p.s;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-p.vx*.04,p.y-p.vy*.04); ctx.stroke(); continue;
     }
-    checkWin();
+    let sz=p.s, a=1-k;
+    if(p.t==='smoke'){ctx.globalCompositeOperation='source-over';sz=p.s*(1+k*2.2);ctx.fillStyle=`rgba(${p.c},${a*.45})`;ctx.beginPath();ctx.arc(p.x,p.y,sz,0,7);ctx.fill();continue}
+    ctx.globalCompositeOperation='lighter'; sz=p.s*(1-k*.6);
+    const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,sz);
+    g.addColorStop(0,`rgba(${p.c},${a})`); g.addColorStop(1,`rgba(${p.c},0)`);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,sz,0,7); ctx.fill();
   }
+  ctx.globalCompositeOperation='source-over';
+  raf=parts.length?requestAnimationFrame(loop):0;
+}
+function center(cell){const r=cell.el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
 
-  function loseGame(explodedCell){
-    gameOver = true;
-    stopTimer();
-    explodedCell.exploded = true;
-    grid.forEach(c=>{
-      if(c.mine && !c.revealed){ c.revealed = true; }
-      if(c.mine) renderCell(c);
-    });
-    resetBtn.textContent = '😵';
-    setStatus('Bạn đã trúng mìn! Nhấn mặt cười để chơi lại.', 'lose');
+function boom(cell,big){
+  const {x,y}=center(cell), s=big?1:.55;
+  sfx(big?'boom':'pop');
+  emit({t:'ring',x,y,grow:big?200:95,s:7,max:.55,c:'255,190,90'});
+  if(big) emit({t:'ring',x,y,grow:120,s:4,max:.4,c:'255,255,255'});
+  for(let i=0;i<Math.round(38*s);i++){
+    const an=R(0,6.28), sp=R(40,300)*s;
+    emit({x,y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp-30,d:.9,max:R(.4,.85),s:R(14,32)*s,c:pick(['255,220,110','255,140,30','230,60,20'])});
   }
-
-  function checkWin(){
-    if(gameOver) return;
-    const total = SIZE*SIZE;
-    if(revealedCount === total - MINES){
-      gameOver = true;
-      stopTimer();
-      grid.forEach(c=>{
-        if(c.mine && !c.flagged){
-          c.flagged = true;
-          renderCell(c);
-        }
-      });
-      flagsPlaced = MINES;
-      updateMineCounter();
-      resetBtn.textContent = '😎';
-      setStatus('Chúc mừng! Bạn đã dò hết bãi mìn.', 'win');
-    }
+  for(let i=0;i<Math.round(34*s);i++){
+    const an=R(0,6.28), sp=R(200,620)*s;
+    emit({t:'spark',x,y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp-80,g:520,d:.97,max:R(.5,1.1),s:R(1.2,2.6),c:'255,214,120'});
   }
-
-  function toggleFlag(cell){
-    if(cell.revealed || gameOver) return;
-    cell.flagged = !cell.flagged;
-    flagsPlaced += cell.flagged ? 1 : -1;
-    updateMineCounter();
-    renderCell(cell);
+  for(let i=0;i<Math.round(16*s);i++)
+    emit({t:'smoke',x:x+R(-8,8),y,vx:R(-30,30),vy:R(-70,-30),d:.97,max:R(1,1.8),s:R(12,22)*s,c:'38,38,44'});
+  if(big){
+    const f=$('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+    panel.classList.remove('shake'); void panel.offsetWidth; panel.classList.add('shake');
   }
+}
+function flagFx(cell,placing){
+  const {x,y}=center(cell);
+  emit({t:'ring',x,y:y+6,grow:placing?26:18,s:3,max:.35,c:placing?'255,200,100':'180,190,210'});
+  if(!placing) return;
+  for(let i=0;i<10;i++){const an=R(0,6.28),sp=R(30,110);
+    emit({x,y:y+8,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp*.5-20,d:.9,max:R(.3,.6),s:R(4,9),c:pick(['255,214,120','255,255,255'])});}
+  for(let i=0;i<6;i++) emit({t:'smoke',x:x+R(-6,6),y:y+10,vx:R(-25,25),vy:R(-15,0),d:.94,max:.5,s:5,c:'120,128,150'});
+}
+function fireworks(){
+  for(let b=0;b<7;b++) timeouts.push(setTimeout(()=>{
+    const x=R(innerWidth*.15,innerWidth*.85), y=R(innerHeight*.15,innerHeight*.5), c=pick(['255,214,90','90,220,160','110,170,255','255,110,110']);
+    sfx('pop'); emit({t:'ring',x,y,grow:90,s:3,max:.5,c});
+    for(let i=0;i<46;i++){const an=R(0,6.28),sp=R(80,320);
+      emit({t:'spark',x,y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,g:260,d:.96,max:R(.9,1.6),s:2.2,c});}
+  },b*380));
+}
 
-  function glowNeighbors(cell, on){
-    neighbors(cell.r,cell.c).forEach(n=>{
-      if(!n.revealed && !n.flagged){
-        n.el.classList.toggle('chord-glow', on);
-      }
-    });
+/* ---------- Logic game ---------- */
+function build(){
+  grid=[]; boardEl.innerHTML='';
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){
+    const el=document.createElement('div'); el.className='cell'; boardEl.appendChild(el);
+    const cell={mine:false,revealed:false,flagged:false,adj:0,r,c,el}; grid.push(cell); attach(el,cell);
   }
+}
+function nbrs(r,c){const a=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;const nr=r+dr,nc=c+dc;if(nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE)a.push(grid[idx(nr,nc)])}return a}
+function placeMines(r0,c0){
+  const ban=new Set([idx(r0,c0),...nbrs(r0,c0).map(n=>idx(n.r,n.c))]); let n=0;
+  while(n<MINES){const i=Math.floor(Math.random()*SIZE*SIZE);if(ban.has(i)||grid[i].mine)continue;grid[i].mine=true;n++}
+  grid.forEach(c=>{if(!c.mine)c.adj=nbrs(c.r,c.c).filter(x=>x.mine).length});
+}
+function setStatus(t,cls){statusEl.textContent=t;statusEl.className='status'+(cls?' '+cls:'')}
+function updMines(){minesEl.textContent=String(MINES-flags).padStart(3,'0')}
+function startTimer(){if(tInt)return;tInt=setInterval(()=>{secs=Math.min(999,secs+1);timerEl.textContent=String(secs).padStart(3,'0')},1000)}
+function stopTimer(){clearInterval(tInt);tInt=null}
 
-  function chordReveal(cell){
-    if(!cell.revealed || cell.mine || cell.adj===0 || gameOver) return;
-    const nbs = neighbors(cell.r,cell.c);
-    const flaggedCount = nbs.filter(n=>n.flagged).length;
-    glowNeighbors(cell, false);
-    if(flaggedCount !== cell.adj) return;
-    nbs.forEach(n=>{
-      if(!n.flagged && !n.revealed) revealCell(n);
-    });
+function reset(){
+  timeouts.forEach(clearTimeout); timeouts=[]; parts=[];
+  over=false; first=false; flags=0; revealed=0; secs=0; stopTimer();
+  timerEl.textContent='000'; updMines(); resetBtn.textContent='🙂'; setStatus(HINT); build();
+}
+
+function render(cell,anim){
+  const el=cell.el; el.className='cell'; el.innerHTML='';
+  if(cell.wrong){el.classList.add('revealed','wrong');el.textContent='✕';return}
+  if(cell.revealed){
+    el.classList.add('revealed');
+    if(cell.mine){el.classList.add('mine-cell');if(cell.exploded)el.classList.add('exploded');el.innerHTML='<div class="bomb"></div>'}
+    else if(cell.adj>0){el.textContent=cell.adj;el.classList.add('n'+cell.adj)}
+  } else if(cell.flagged){
+    el.innerHTML=`<svg class="flag${anim?' plant':''}" viewBox="0 0 24 24"><ellipse cx="12" cy="21" rx="6.5" ry="1.9" fill="rgba(0,0,0,.55)"/><rect x="11" y="3" width="1.7" height="18" rx=".8" fill="#d3d9e8"/><path class="cloth" d="M12.7 3.6 L21.5 7.4 L12.7 11.4Z" fill="#e0524a" stroke="#8a1f1a" stroke-width=".5"/><circle cx="11.85" cy="3" r="1.5" fill="#e6a13d"/></svg>`;
   }
+}
 
-  function doPrimaryAction(cell){
-    if(gameOver) return;
-    if(!firstClickDone){
-      placeMines(cell.r, cell.c);
-      firstClickDone = true;
-      startTimer();
-    }
-    if(mode === 'flag'){
-      toggleFlag(cell);
-    } else {
-      if(cell.flagged) return;
-      revealCell(cell);
-    }
+function revealCell(start){
+  if(start.revealed||start.flagged||over) return;
+  if(start.mine){start.revealed=true;revealed++;return lose(start)}
+  const q=[[start,0]]; start.revealed=true; revealed++;
+  while(q.length){
+    const [c,d]=q.shift(); c.el.style.setProperty('--d',Math.min(d*35,700)+'ms'); render(c);
+    if(c.adj===0) nbrs(c.r,c.c).forEach(n=>{if(!n.revealed&&!n.flagged&&!n.mine){n.revealed=true;revealed++;q.push([n,d+1])}});
   }
+  checkWin();
+}
 
-  function doLongPressAction(cell){
-    if(gameOver) return;
-    if(!firstClickDone) return; // nothing to chord/flag before board exists meaningfully
-    if(cell.revealed && cell.adj>0){
-      chordReveal(cell);
-    } else if(!cell.revealed){
-      toggleFlag(cell);
-    }
-  }
+function lose(hit){
+  over=true; stopTimer(); hit.exploded=true; render(hit); boom(hit,true);
+  resetBtn.textContent='😵'; setStatus('Bạn đã trúng mìn! Nhấn mặt cười để chơi lại.','lose');
+  const others=grid.filter(c=>c.mine&&!c.revealed&&!c.flagged)
+    .sort((a,b)=>Math.hypot(a.r-hit.r,a.c-hit.c)-Math.hypot(b.r-hit.r,b.c-hit.c));
+  others.forEach((c,i)=>timeouts.push(setTimeout(()=>{c.revealed=true;render(c);boom(c,false)},260+Math.min(i*70,1500))));
+  grid.forEach(c=>{if(c.flagged&&!c.mine){c.wrong=true;render(c)}});
+}
 
-  function attachHandlers(el, cell){
-    el.addEventListener('contextmenu', e=>{
-      e.preventDefault();
-      if(gameOver) return;
-      if(!firstClickDone){
-        // right click before first move: just place a flag is fine, no mine placement needed
-      }
-      toggleFlag(cell);
-    });
+function checkWin(){
+  if(over||revealed!==SIZE*SIZE-MINES) return;
+  over=true; stopTimer();
+  grid.forEach((c,i)=>{if(c.mine&&!c.flagged){c.flagged=true;timeouts.push(setTimeout(()=>{render(c,true);flagFx(c,true)},i*12))}});
+  flags=MINES; updMines(); resetBtn.textContent='😎'; setStatus('Chúc mừng! Bạn đã dò hết bãi mìn.','win'); fireworks();
+}
 
-    el.addEventListener('pointerdown', e=>{
-      if(e.button === 2) return;
-      longPressFired = false;
-      pressCell = cell;
-      if(cell.revealed && cell.adj>0){
-        glowNeighbors(cell, true);
-      }
-      pressTimer = setTimeout(()=>{
-        longPressFired = true;
-        doLongPressAction(cell);
-      }, LONG_PRESS_MS);
-    });
-
-    const clearPress = ()=>{
-      clearTimeout(pressTimer);
-      if(pressCell) glowNeighbors(pressCell, false);
-    };
-
-    el.addEventListener('pointerup', e=>{
-      if(e.button === 2) return;
-      clearTimeout(pressTimer);
-      if(pressCell) glowNeighbors(pressCell, false);
-      if(!longPressFired){
-        doPrimaryAction(cell);
-      }
-      longPressFired = false;
-      pressCell = null;
-    });
-
-    el.addEventListener('pointerleave', clearPress);
-    el.addEventListener('pointercancel', clearPress);
-  }
-
-  modeToggle.addEventListener('click', ()=>{
-    mode = mode === 'dig' ? 'flag' : 'dig';
-    if(mode === 'flag'){
-      modeToggle.textContent = '⚑';
-      modeToggle.classList.add('flag-mode');
-      const hint = document.createElement('span');
-      hint.className = 'hint';
-      hint.id = 'modeHint';
-      hint.textContent = 'Cắm cờ';
-      modeToggle.appendChild(hint);
-    } else {
-      modeToggle.textContent = '🔍';
-      modeToggle.classList.remove('flag-mode');
-      const hint = document.createElement('span');
-      hint.className = 'hint';
-      hint.id = 'modeHint';
-      hint.textContent = 'Dò';
-      modeToggle.appendChild(hint);
-    }
+function toggleFlag(cell){
+  if(cell.revealed||over) return;
+  cell.flagged=!cell.flagged; flags+=cell.flagged?1:-1; updMines();
+  render(cell,cell.flagged); flagFx(cell,cell.flagged); sfx(cell.flagged?'flag':'unflag');
+}
+function glow(cell,on){nbrs(cell.r,cell.c).forEach(n=>{if(!n.revealed&&!n.flagged)n.el.classList.toggle('glow',on)})}
+function chord(cell){
+  if(!cell.revealed||cell.mine||!cell.adj||over) return;
+  const ns=nbrs(cell.r,cell.c); glow(cell,false);
+  if(ns.filter(n=>n.flagged).length!==cell.adj) return;
+  ns.forEach(n=>{if(!n.flagged&&!n.revealed)revealCell(n)});
+}
+function primary(cell){
+  if(over) return;
+  if(!first){placeMines(cell.r,cell.c);first=true;startTimer()}
+  if(mode==='flag') toggleFlag(cell);
+  else if(!cell.flagged){const safe=!cell.mine&&!cell.revealed; revealCell(cell); if(safe) sfx('tick')}
+}
+function longPress(cell){
+  if(over||!first) return;
+  if(cell.revealed&&cell.adj>0) chord(cell); else if(!cell.revealed) toggleFlag(cell);
+}
+function attach(el,cell){
+  el.addEventListener('contextmenu',e=>{e.preventDefault();if(!over)toggleFlag(cell)});
+  el.addEventListener('pointerdown',e=>{
+    if(e.button===2) return;
+    longFired=false; pressCell=cell;
+    if(cell.revealed&&cell.adj>0) glow(cell,true);
+    pressTimer=setTimeout(()=>{longFired=true;longPress(cell)},450);
   });
+  const clear=()=>{clearTimeout(pressTimer);if(pressCell)glow(pressCell,false)};
+  el.addEventListener('pointerup',e=>{
+    if(e.button===2) return; clear();
+    if(!longFired) primary(cell);
+    longFired=false; pressCell=null;
+  });
+  el.addEventListener('pointerleave',clear); el.addEventListener('pointercancel',clear);
+}
 
-  resetBtn.addEventListener('click', reset);
+modeBtn.addEventListener('click',()=>{
+  mode=mode==='dig'?'flag':'dig';
+  $('modeIcon').textContent=mode==='flag'?'⚑':'🔍';
+  $('modeHint').textContent=mode==='flag'?'Cắm cờ':'Dò';
+  modeBtn.classList.toggle('on',mode==='flag');
+});
+resetBtn.addEventListener('click',reset);
+boardEl.addEventListener('contextmenu',e=>e.preventDefault());
 
-  boardEl.addEventListener('contextmenu', e=>e.preventDefault());
-
-  reset();
+/* nghiêng bàn chơi theo chuột */
+document.addEventListener('pointermove',e=>{
+  if(e.pointerType!=='mouse') return;
+  const x=e.clientX/innerWidth-.5, y=e.clientY/innerHeight-.5;
+  boardEl.style.setProperty('--ry',(x*10)+'deg'); boardEl.style.setProperty('--rx',(16-y*8)+'deg');
+});
+reset();
 })();
 </script>
 </body>
